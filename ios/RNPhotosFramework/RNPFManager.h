@@ -7,6 +7,7 @@
 #import "PHOperationResult.h"
 #import "PHChangeObserver.h"
 #import "PHSaveAssetToFileOperationResult.h"
+#import "PHAssetWithCollectionIndex.h"
 
 @import UIKit;
 @import Photos;
@@ -26,4 +27,8 @@ typedef void(^createAssetsCompleteBlock)( NSMutableArray<PHOperationResult *> * 
 }
 @property (nonatomic, strong) __nonnull dispatch_queue_t currentQueue;
 @property (nonatomic, strong)  PHChangeObserver * __nullable changeObserver;
+
+-(void) prepareAssetsForDisplayWithParams:(NSDictionary *_Nullable)params andAssets:(NSArray<PHAssetWithCollectionIndex *> *_Nullable)assets;
+
+
 @end

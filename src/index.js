@@ -1,4 +1,4 @@
-import ReactPropTypes from 'prop-types';
+// import ReactPropTypes from 'prop-types';
 import {
   NativeEventEmitter,
   NativeModules
@@ -88,7 +88,7 @@ class RNPhotosFramework {
     //the most recent photo first. So by default we load the results in reverse by saying assetDisplayStartToEnd = false.
     //However. If this option is not expicitly set and you provide a saortDescriptor, we no longer want to reverse the ordser
     //of the photos. Then we want to display them as is. So here we check for that scenario. If the key assetDisplayStartToEnd is
-    //not explicitly set and there is a sortDescriptor, do not reverse the order of the photos by assetDisplayStartToEnd = true.  
+    //not explicitly set and there is a sortDescriptor, do not reverse the order of the photos by assetDisplayStartToEnd = true.
     if (params && params.fetchOptions && params.assetDisplayStartToEnd === undefined && params.fetchOptions.sortDescriptors && params.fetchOptions.sortDescriptors.length) {
       params.assetDisplayStartToEnd = true;
     }

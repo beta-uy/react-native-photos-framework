@@ -80,6 +80,32 @@
 
 }
 
+// Beta custom predicate
++(NSPredicate *) getDatePredicatesForParams:(NSDictionary *)params {
+    NSArray *customPredicates = [RCTConvert NSArray:params[@"datePredicates"]];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+    
+    if(customPredicates == nil || customPredicates.count == 0) {
+        return nil;
+    }
+    NSMutableArray<NSPredicate *> *nsPredicates = [NSMutableArray arrayWithCapacity:customPredicates.count];
+    for(int i = 0; i < customPredicates.count; i++) {
+        NSDictionary *predicateObj = [RCTConvert NSDictionary:[customPredicates objectAtIndex:i]];
+        NSString *predicate = [predicateObj objectForKey:@"predicate"];
+        if(predicate != nil) {
+            NSString *argument = [predicateObj objectForKey:@"predicateArg"];
+            NSDate *date = [dateFormatter dateFromString:argument];
+            if (date == nil) {
+                return nil;
+            }
+            [nsPredicates addObject:[NSPredicate predicateWithFormat:predicate,date]];
+        }
+    }
+    return [NSCompoundPredicate andPredicateWithSubpredicates:nsPredicates];
+}
+
 +(PHFetchOptions *)extendWithDefaultsForAssets:(PHFetchOptions *)phFetchOptions {
     return nil;
 }
@@ -88,7 +114,8 @@
     NSPredicate *mediaTypePredicate = [PHFetchOptionsService getMediaTypePredicate:params];
     NSPredicate *subTypePredicate = [PHFetchOptionsService getMediaSubTypePredicate:params];
     NSPredicate *customPredicate = [PHFetchOptionsService getCustomPredicatesForParams:params];
-    NSMutableArray *arrayWithPredicates = [NSMutableArray arrayWithCapacity:3];
+    NSPredicate *datePredicate = [PHFetchOptionsService getDatePredicatesForParams:params];
+    NSMutableArray *arrayWithPredicates = [NSMutableArray arrayWithCapacity:4];
     if(mediaTypePredicate) {
         [arrayWithPredicates addObject:mediaTypePredicate];
     }
@@ -97,6 +124,9 @@
     }
     if(customPredicate) {
         [arrayWithPredicates addObject:customPredicate];
+    }
+    if(datePredicate) {
+        [arrayWithPredicates addObject:datePredicate];
     }
     return [NSCompoundPredicate andPredicateWithSubpredicates:arrayWithPredicates];
 }
